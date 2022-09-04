@@ -1,6 +1,6 @@
-import Card from "./Card";
+import Index from "./Card";
 
-function Header (){
+function Header (props){
     return(
         <header className="d-flex justify-between align-center">
             <div className="d-flex align-center">
@@ -12,11 +12,11 @@ function Header (){
             </div>
             <ul className="d-flex">
                 <li className="mr-30">
-                    <img width={18} height={18} src="/img/cart.svg"/>
+                    <img onClick={props.onClickCart} className="cu-p" width={18} height={18} src="/img/cart.svg"/>
                     <span>200$</span>
                 </li>
-                <li>
-                    <img width={18} height={18} src="/img/user.svg"/>
+                <li >
+                    <img className="cu-p" width={18} height={18} src="/img/user.svg"/>
                 </li>
             </ul>
         </header>

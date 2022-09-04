@@ -1,12 +1,33 @@
+import React from "react";
 import Card from './components/Card';
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
 
 function App() {
+    const [items, setItems] = React.useState([]);
+    const [cartItems, setCartItems] = React.useState([]);
+    const [cartOpened, setCartOpened] = React.useState(false);
+
+    React.useEffect(() => {
+        fetch('https://63148ba5fa82b738f74994aa.mockapi.io/items').then((res) => {
+            return res.json();
+        })
+            .then((json) => {
+                setItems(json);
+            });
+    }, []);
+
+    const onAddToCart = (obj) => {
+
+        console.log(cartItems.includes(obj));
+            setCartItems(prev => [...prev, obj])
+
+    };
+
     return (
         <div className="wrapper clear">
-            <Drawer/>
-            <Header/>
+            {cartOpened && <Drawer items={cartItems} onClose={() => setCartOpened(false)}/>}
+            <Header onClickCart={() => setCartOpened(true)}/>
             <div className="content p-40">
                 <div className="d-flex align-center mb-40 justify-between">
                     <h1>All sneakers</h1>
@@ -15,59 +36,17 @@ function App() {
                         <input placeholder="Search..."/>
                     </div>
                 </div>
-                <div className="d-flex">
-                    <Card/>
-                    <div className="card">
-                        <div className="favorite">
-                            <img src="/img/unliked.svg" alt="Unliked"/>
-                        </div>
-                        <img width={133} height={112} src="/img/sneakers/2.jpg" alt="Sneakers"/>
-                        <h5>Men's sneakers Nike Blazer Mid Suede</h5>
-                        <div className="d-flex justify-between align-center">
-                            <div className="d-flex flex-column">
-                                <span>Price:</span>
-                                <b>155$</b>
-                            </div>
-                            <button className="button">
-                                <img width={11} height={11} src="/img/plus.svg" alt="Plus"/>
-                            </button>
-
-                        </div>
-                    </div>
-                    <div className="card">
-                        <div className="favorite">
-                            <img src="/img/unliked.svg" alt="Unliked"/>
-                        </div>
-                        <img width={133} height={112} src="/img/sneakers/3.jpg" alt="Sneakers"/>
-                        <h5>Men's sneakers Nike Blazer Mid Suede</h5>
-                        <div className="d-flex justify-between align-center">
-                            <div className="d-flex flex-column">
-                                <span>Price:</span>
-                                <b>155$</b>
-                            </div>
-                            <button className="button">
-                                <img width={11} height={11} src="/img/plus.svg" alt="Plus"/>
-                            </button>
-
-                        </div>
-                    </div>
-                    <div className="card">
-                        <div className="favorite">
-                            <img src="/img/unliked.svg" alt="Unliked"/>
-                        </div>
-                        <img width={133} height={112} src="/img/sneakers/4.jpg" alt="Sneakers"/>
-                        <h5>Men's sneakers Nike Blazer Mid Suede</h5>
-                        <div className="d-flex justify-between align-center">
-                            <div className="d-flex flex-column">
-                                <span>Price:</span>
-                                <b>155$</b>
-                            </div>
-                            <button className="button">
-                                <img width={11} height={11} src="/img/plus.svg" alt="Plus"/>
-                            </button>
-
-                        </div>
-                    </div>
+                <div className="d-flex flex-wrap">
+                    {items.map((item) => (
+                        <Card
+                            key={item.title}
+                            title={item.title}
+                            price={item.price}
+                            imageUrl={item.imageUrl}
+                            onFavorite={() => console.log('Добавили в закладки')}
+                            onPlus={(obj) => onAddToCart(obj)}
+                        />
+                    ))}
                 </div>
             </div>
         </div>
